@@ -11,7 +11,7 @@
   <remove-project path="vendor/hecker/floral/suite" optional="true" />
   <project name="its-hecker/heckeros-floral-devicetree" path="device/google/coral" remote="floral-github" revision="e00918e713e8561a8f931d5377c97c5af8d55068" upstream="refs/heads/flame" dest-branch="flame" />
   <project name="its-hecker/HeckerOs-Flame-vendor" path="vendor/google/flame" remote="floral-github" revision="ed43a21e890e8581873566f0b7a03839b3d56b0f" upstream="refs/heads/main" dest-branch="main" />
-  <project name="its-hecker/heckeros-floral-kernel" path="kernel/google/msm-4.14" remote="floral-github" revision="48d6881fb8537f62811209927022e467d37e3a98" upstream="refs/heads/feat/game-booster-reference" dest-branch="feat/game-booster-reference" sync-s="true" />
+  <project name="its-hecker/HeckerOsfloral-Kernel-NonKsu" path="kernel/google/msm-4.14" remote="floral-github" revision="ffefc8f518edd3a6de01403b5ea0d68029cd8067" upstream="refs/heads/main" dest-branch="main" />
   <project name="LineageOS/android_packages_apps_ElmyraService" path="packages/apps/ElmyraService" remote="floral-github" revision="baab2beb7165caef27b4ee235641775e9d189acc" upstream="refs/heads/lineage-24.0" />
   <project name="its-hecker/vendor_lunaris_dolby" path="vendor/lunaris/dolby" remote="floral-github" revision="544e6271c955e2bf450c8481ac1e71551cb5a800" upstream="refs/heads/pixelos-compat" dest-branch="pixelos-compat" />
   <project name="its-hecker/floral-motionsense-plugin" path="vendor/hecker/floral/motionsense" remote="floral-github" revision="92d0051faf53acac3dfefec6597a12d587eefa73" upstream="refs/heads/main" dest-branch="main" />

@@ -305,9 +305,11 @@
       "revision": "ed43a21e890e8581873566f0b7a03839b3d56b0f"
     },
     "kernel": {
-      "repository": "its-hecker/heckeros-floral-kernel",
-      "branch": "feat/game-booster-reference",
-      "revision": "48d6881fb8537f62811209927022e467d37e3a98"
+      "repository": "its-hecker/HeckerOsfloral-Kernel-NonKsu",
+      "branch": "main",
+      "revision": "ffefc8f518edd3a6de01403b5ea0d68029cd8067",
+      "variant": "nonksu",
+      "rooted_base_revision": "48d6881fb8537f62811209927022e467d37e3a98"
     }
   },
   "platform_ownership": {

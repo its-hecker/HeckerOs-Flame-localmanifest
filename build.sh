@@ -3,6 +3,8 @@
 # Run from the Android source root, after repo sync.
 # Android's envsetup does not support nounset, so do not enable set -u here.
 set -eo pipefail
+# Keep optional kernel builds separate from the normal ROM output.
+export OUT_DIR="${HECKER_NONKSU_OUT_DIR:-out-nonksu}"
 export HECKER_DEVICE="${HECKER_DEVICE:-flame}"
 case "$HECKER_DEVICE" in
     coral|flame) ;;
@@ -57,5 +59,13 @@ if [[ "$floral_stale_app" == true ]]; then
     echo "Removing retired app installations from build outputs (installclean)."
     m installclean
 fi
-m -j"${HECKER_BUILD_JOBS:-$(nproc)}" heckeros
-python3 "$floral_setup_dir/tools/check_built_output.py" "$floral_product_out"
+if [[ "${HECKER_NONKSU_BOOT_ONLY:-false}" == true ]]; then
+    : "${HECKER_KSU_PRODUCT_OUT:?Run build-nonksu-boot.sh with the matching rooted ROM output}"
+    m -j"${HECKER_BUILD_JOBS:-$(nproc)}" bootimage
+    python3 kernel/google/msm-4.14/tools/hecker/package_boot.py \
+        --device "$HECKER_DEVICE" --rooted-out "$HECKER_KSU_PRODUCT_OUT" \
+        --nonksu-out "$floral_product_out"
+else
+    m -j"${HECKER_BUILD_JOBS:-$(nproc)}" heckeros
+    python3 "$floral_setup_dir/tools/check_built_output.py" "$floral_product_out"
+fi

@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = {
     "device/google/coral": "its-hecker/heckeros-floral-devicetree",
     VENDOR: VENDOR_REPOSITORIES[DEVICE],
-    "kernel/google/msm-4.14": "its-hecker/heckeros-floral-kernel",
+    "kernel/google/msm-4.14": "its-hecker/HeckerOsfloral-Kernel-NonKsu",
     "packages/apps/ElmyraService": "LineageOS/android_packages_apps_ElmyraService",
     "vendor/lunaris/dolby": "its-hecker/vendor_lunaris_dolby",
     "vendor/hecker/floral/motionsense": "its-hecker/floral-motionsense-plugin",
@@ -50,9 +50,9 @@ def manifest(root=ROOT):
             require(re.fullmatch(r"[0-9a-f]{40}", revision), "Unpinned dependency: " + path)
             require(project.get("upstream", "").startswith("refs/heads/"), "Missing upstream ref")
         if path.startswith("kernel/"):
-            require(project.get("sync-s") == "true", "KernelSU submodule sync is disabled")
-            require(project.get("upstream") in {"refs/heads/main", "refs/heads/feat/game-booster-reference"}, "Wrong HeckerOS kernel branch")
-    print("Local manifest paths, dependency pins and kernel submodule sync: PASS")
+            require(project.get("sync-s") != "true", "Non-KSU builds must not sync root submodules")
+            require(project.get("upstream") == "refs/heads/main", "Wrong non-KSU kernel branch")
+    print("Local manifest paths, dependency pins and non-KSU kernel selection: PASS")
 
 
 def camera_prebuilt(rom):
@@ -238,7 +238,7 @@ def source(rom):
         (VENDOR + "/proprietary/vendor/dsp/sdsp/oslo.napp_header"),
         "vendor/pixel/gms/products/gms.mk", "vendor/custom/config/common_full_phone.mk",
         "kernel/google/msm-4.14/arch/arm64/configs/floral_defconfig",
-        "kernel/google/msm-4.14/KernelSU/kernel/Kconfig",
+        "kernel/google/msm-4.14/NONKSU_SOURCE.json",
         "packages/apps/ElmyraService/Android.bp", "vendor/lunaris/dolby/BoardConfigDolby.mk",
     ]
     for path in required:
@@ -247,10 +247,8 @@ def source(rom):
     expected_kernel = ET.parse(ROOT / "floral.xml").getroot().find("project[@path='kernel/google/msm-4.14']").get("revision")
     kernel_revision = subprocess.check_output(["git", "-C", str(kernel), "rev-parse", "HEAD"], text=True).strip()
     require(kernel_revision == expected_kernel, "Kernel checkout does not match the pinned CNB source")
-    gitlink = subprocess.check_output(["git", "-C", str(kernel), "ls-tree", "HEAD", "KernelSU"], text=True).split()
-    submodule_revision = subprocess.check_output(["git", "-C", str(kernel / "KernelSU"), "rev-parse", "HEAD"], text=True).strip()
-    require(len(gitlink) == 4 and gitlink[0] == "160000" and gitlink[2] == submodule_revision,
-            "KernelSU checkout differs from the kernel's gitlink; run repo sync")
+    subprocess.run([sys.executable, str(kernel / "tools/hecker/verify_nonksu.py"),
+                    "--source-root", str(kernel)], check=True)
     device = rom / "device/google/coral"
     camera_prebuilt(rom)
     replaced_vendor_installers(rom)
