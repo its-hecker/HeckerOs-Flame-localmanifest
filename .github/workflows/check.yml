@@ -1,0 +1,17 @@
+name: Flame manifest checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate source pins and build integration
+        run: |
+          python3 tools/validate.py
+          bash -n build.sh
+          python3 -m unittest discover -s tests -p 'test_*.py'
