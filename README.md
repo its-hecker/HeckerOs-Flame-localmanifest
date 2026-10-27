@@ -67,3 +67,14 @@ Wi-Fi/Bluetooth, audio, thermal/charging behavior, GameSpace/bypass/popup apps,
 launcher/Recents, Quick Settings, AOD and Suite features after the first full build.
 
 [Detailed Flame notes](https://github.com/its-hecker/HeckerOS/blob/feat/suite-polish/docs/flame-bringup.md)
+
+## Pakistan IMS test configuration
+
+This manifest pins the shared Suite with VoLTE/Wi-Fi Calling defaults and
+dedicated IMS APNs for Jazz/Warid, Ufone, Zong and Telenor. Independent icon
+switches are under Hecker Suite > Status bar > Calling indicators; icons follow
+actual IMS voice registration and availability for each SIM.
+
+Source, SDK and host checks pass. Working calls and a compatible Pakistan modem
+profile remain unverified; rebuild and test the individual SIMs before marking
+a carrier as supported. See the [IMS implementation and device checks](https://github.com/its-hecker/HeckerOS/blob/a51eacc198efe0a79a1f5e5e455c422064206e95/ims/README.md).

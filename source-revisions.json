@@ -281,8 +281,27 @@
         "notes": "Current PIF Java behavior adapted to HeckerOS Settings/process-scoped native property bridge; overlapping PixelOS PIF/keybox call paths removed."
       }
     },
-    "revision": "91b096ca18808fb5da17dfd0dd239cb36b646ac3",
-    "coral_feature_baseline": "3a35f836add54a82c14d030f7a7e6fefe093a98d"
+    "revision": "a51eacc198efe0a79a1f5e5e455c422064206e95",
+    "coral_feature_baseline": "3a35f836add54a82c14d030f7a7e6fefe093a98d",
+    "pakistan_ims": {
+      "configured_on": "2026-10-27",
+      "configured_carriers": [
+        "Jazz",
+        "Jazz/Warid",
+        "Ufone",
+        "Zong",
+        "Telenor"
+      ],
+      "configured_plmns": [
+        "41001",
+        "41007",
+        "41003",
+        "41004",
+        "41006"
+      ],
+      "documentation": "ims/README.md",
+      "validation": "Source/API checked; full ROM build, device VoLTE/VoWiFi calling and compatible Pakistan modem profiles remain unverified."
+    }
   },
   "heckeros": {
     "version": "1.0",
