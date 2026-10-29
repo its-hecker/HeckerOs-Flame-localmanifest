@@ -1,5 +1,5 @@
 {
-  "checked_on": "2026-10-27",
+  "checked_on": "2026-10-29",
   "pixelos_manifest": {
     "repository": "PixelOS-AOSP/android_manifest",
     "branch": "seventeen",
@@ -178,7 +178,9 @@
         "packages/SystemUI/src/com/android/systemui/volume/SafetyWarningDialogDelegate.java",
         "packages/SystemUI/src/com/android/systemui/volume/CsdWarningDialogDelegate.java",
         "packages/SystemUI/plugin/src/com/android/systemui/plugins/VolumeDialog.java",
-        "packages/SystemUI/plugin/src/com/android/systemui/plugins/VolumeDialogController.java"
+        "packages/SystemUI/plugin/src/com/android/systemui/plugins/VolumeDialogController.java",
+        "packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowControllerImpl.java",
+        "core/java/com/android/internal/policy/SystemBarUtils.java"
       ]
     },
     "hardware/google/camera": {
@@ -238,8 +240,8 @@
     }
   },
   "hecker_suite": {
-    "source_branch": "feat/suite-polish",
-    "integration_branch": "feat/suite-polish",
+    "source_branch": "feat/statusbar-lyrics-dual-20261029",
+    "integration_branch": "feat/statusbar-lyrics-dual-nonksu-20261029",
     "release": "hecker_suite",
     "base_release": "cp2a",
     "status": "Source validation only; full ROM build and phone tests required",
@@ -281,7 +283,7 @@
         "notes": "Current PIF Java behavior adapted to HeckerOS Settings/process-scoped native property bridge; overlapping PixelOS PIF/keybox call paths removed."
       }
     },
-    "revision": "91b096ca18808fb5da17dfd0dd239cb36b646ac3",
+    "revision": "b976e56ce5458e74db7a854a023611c92d374f50",
     "coral_feature_baseline": "3a35f836add54a82c14d030f7a7e6fefe093a98d"
   },
   "heckeros": {
@@ -336,5 +338,24 @@
       "device_revision": "e00918e713e8561a8f931d5377c97c5af8d55068",
       "vendor_revision": "ed43a21e890e8581873566f0b7a03839b3d56b0f"
     }
+  },
+  "statusbar_rows_test": {
+    "branch": "feat/statusbar-lyrics-dual-20261029",
+    "parent_suite_revision": "65f42ab27da9ce25fde3e1bb8862879cd78814f9",
+    "devices": [
+      "flame",
+      "coral"
+    ],
+    "lyrics": "Shared LRCLIB worker/cache/media state with independent per-user lock and status subscriptions; status subscription remains active while unlocked.",
+    "heights_dp": [
+      44,
+      52,
+      60
+    ],
+    "insets": "Built-in signed framework RROs; native theme service mirrors the foreground choice into system-user resources without rewriting preferences.",
+    "flame_framework_revision": "854e6dbf73ae1cd61095085a9655c8d9136104eb",
+    "validation": "Source, SDK, native-adapter and host checks; full Soong/ROM builds and both phones remain required.",
+    "manifest_branch": "feat/statusbar-lyrics-dual-nonksu-20261029",
+    "previous_suite_revision": "91b096ca18808fb5da17dfd0dd239cb36b646ac3"
   }
 }

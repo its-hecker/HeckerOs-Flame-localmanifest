@@ -1,11 +1,26 @@
 # HeckerOS non-KSU boot build — Pixel 4 (`flame`)
 
-This `nonksu` branch selects the optional
+This `feat/statusbar-lyrics-dual-nonksu-20261029` branch selects the optional
 [Floral kernel without KernelSU Next](https://github.com/its-hecker/HeckerOsfloral-Kernel-NonKsu).
 The normal manifest branch continues selecting the regular KSU kernel. Every other
 platform, device, vendor, plugin and Suite selection is retained from this device's
 normal manifest. KernelSU Next and SUSFS are removed; the non-root kernel code,
 configuration and GameSpace charging driver are preserved.
+
+## Shared status-bar feature sources
+
+This feature branch selects shared status-bar lyrics and optional dual rows on top
+of Living Flow clocks, wake blur and Hecker QS. Both new switches default off under
+Hecker Suite → Status bar. LRCLIB fetching/cache/media timing is shared with the
+independent lock-screen switch and continues while unlocked. Native 44/52/60 dp
+height overlays update app/SystemUI insets; row spacing, icon size and lyric
+alignment/width/font/colour/fade/marquee are configurable.
+
+The original Flame device, vendor, framework and kernel selections remain intact.
+The normal and optional non-KSU manifests select the same new Suite revision.
+Provider/layout/overlay host checks, locked SDK/Compose and the Flame framework
+adapter checks pass. Full ROM builds and physical Flame acceptance remain pending.
+See [controls, implementation and device checks](https://github.com/its-hecker/HeckerOS/blob/feat/statusbar-lyrics-dual-20261029/docs/statusbar-lyrics-dual.md).
 
 ## Build the optional image
 
@@ -18,7 +33,7 @@ session and the normal Android 17 prerequisites, Git LFS, Python, Java, Pillow a
 mkdir -p ~/heckeros-flame-nonksu
 cd ~/heckeros-flame-nonksu
 repo init -u https://github.com/its-hecker/HeckerOS -b feat/suite-polish --git-lfs
-git clone --branch nonksu https://github.com/its-hecker/HeckerOs-Flame-localmanifest .repo/local_manifests
+git clone --branch feat/statusbar-lyrics-dual-nonksu-20261029 https://github.com/its-hecker/HeckerOs-Flame-localmanifest .repo/local_manifests
 repo sync -c -j8 --fail-fast --no-clone-bundle --no-tags
 HECKER_KSU_PRODUCT_OUT=~/heckeros-flame/out/target/product/flame \
   HECKER_BUILD_JOBS=8 bash .repo/local_manifests/build-nonksu-boot.sh
