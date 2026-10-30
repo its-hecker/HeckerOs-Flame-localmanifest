@@ -23,20 +23,25 @@ Provider/layout/overlay host checks, locked SDK/Compose and the Flame framework
 adapter checks pass. Full ROM builds and physical Flame acceptance remain pending.
 See [controls, implementation and device checks](https://github.com/its-hecker/HeckerOS/blob/feat/statusbar-lyrics-dual-20261029/docs/statusbar-lyrics-dual.md).
 
-## Sync and build
+## Complete build from mkdir
 
 Start in a separate source directory with the same Android 17 prerequisites as Coral:
 Git LFS, Python 3.12+, Java 21+, Pillow and numpy. Use the provider's initialized
 Byobu/RBE environment if building on ServerHive.
 
 ```bash
-mkdir -p ~/heckeros-flame
-cd ~/heckeros-flame
-repo init -u https://github.com/its-hecker/HeckerOS -b feat/suite-polish --git-lfs
-git clone --branch feat/statusbar-lyrics-dual-20261029 https://github.com/its-hecker/HeckerOs-Flame-localmanifest .repo/local_manifests
-repo sync -c -j8 --fail-fast --no-clone-bundle --no-tags
-HECKER_BUILD_JOBS=8 bash .repo/local_manifests/build.sh
+mkdir -p ~/heckeros-flame &&
+cd ~/heckeros-flame &&
+git lfs install &&
+repo init -u https://github.com/its-hecker/HeckerOS.git -b feat/suite-polish --git-lfs &&
+git clone --branch feat/statusbar-lyrics-dual-20261029 --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
+repo sync -c -j8 --fail-fast --no-clone-bundle --no-tags &&
+HECKER_DEVICE=flame HECKER_BUILD_VARIANT=userdebug HECKER_BUILD_JOBS=8 bash .repo/local_manifests/build.sh
 ```
+
+Copy the entire block in the initialized build shell. The `&&` chain stops
+at the first failure; the helper performs environment setup, target selection,
+preparation and compilation. Keep ServerHive's existing RBE settings.
 
 The helper defaults to Flame, fetches its radio images through the preserved upstream
 LFS endpoint, prepares the same guarded feature adapters as Coral, selects
@@ -54,7 +59,7 @@ HECKER_BUILD_JOBS=8 bash .repo/local_manifests/build.sh
 | Shared device tree | `its-hecker/heckeros-floral-devicetree`, branch `flame`, path `device/google/coral` |
 | Flame hardware variant | Original `flame/` configuration: 1080x2280, 440 dpi, Flame overlays/audio/thermal/CHRE |
 | Vendor | `its-hecker/HeckerOs-Flame-vendor`, path `vendor/google/flame` |
-| Kernel | Same exact Floral kernel and KernelSU submodule pin as Coral |
+| Kernel | Shared Floral kernel; this branch's exact pin is recorded in `floral.xml` |
 | Features | Shared `its-hecker/HeckerOS` on `feat/statusbar-lyrics-dual-20261029`, retaining Flame's existing dependency pins |
 
 `device/google/coral` is the common source directory for both phones and remains
