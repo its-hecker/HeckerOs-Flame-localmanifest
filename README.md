@@ -22,7 +22,7 @@ Provider/layout/overlay host checks, locked SDK/Compose and the Flame framework
 adapter checks pass. Full ROM builds and physical Flame acceptance remain pending.
 See [controls, implementation and device checks](https://github.com/its-hecker/HeckerOS/blob/feat/statusbar-lyrics-dual-20261029/docs/statusbar-lyrics-dual.md).
 
-## Build the optional image
+## Complete optional boot build from mkdir
 
 First build the normal HeckerOS ROM and retain its complete output. Use a separate
 Android source checkout for the non-KSU build, with the **same release source pins,
@@ -30,14 +30,19 @@ build configuration and signing settings**. Use the initialized provider/Byobu/R
 session and the normal Android 17 prerequisites, Git LFS, Python, Java, Pillow and numpy.
 
 ```bash
-mkdir -p ~/heckeros-flame-nonksu
-cd ~/heckeros-flame-nonksu
-repo init -u https://github.com/its-hecker/HeckerOS -b feat/suite-polish --git-lfs
-git clone --branch feat/statusbar-lyrics-dual-nonksu-20261029 https://github.com/its-hecker/HeckerOs-Flame-localmanifest .repo/local_manifests
-repo sync -c -j8 --fail-fast --no-clone-bundle --no-tags
-HECKER_KSU_PRODUCT_OUT=~/heckeros-flame/out/target/product/flame \
+mkdir -p ~/heckeros-flame-nonksu &&
+cd ~/heckeros-flame-nonksu &&
+git lfs install &&
+repo init -u https://github.com/its-hecker/HeckerOS.git -b feat/suite-polish --git-lfs &&
+git clone --branch feat/statusbar-lyrics-dual-nonksu-20261029 --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
+repo sync -c -j8 --fail-fast --no-clone-bundle --no-tags &&
+HECKER_DEVICE=flame HECKER_KSU_PRODUCT_OUT="$HOME/heckeros-flame/out/target/product/flame" \
   HECKER_BUILD_JOBS=8 bash .repo/local_manifests/build-nonksu-boot.sh
 ```
+
+Copy the entire block in the initialized build shell. The `&&` chain stops
+at the first failure; the helper performs environment setup, target selection,
+preparation and compilation. Keep ServerHive's existing RBE settings.
 
 Set `HECKER_KSU_PRODUCT_OUT` to the normal build's actual `target/product/flame`
 directory. The helper requires its boot image, properties, kernel config, release
