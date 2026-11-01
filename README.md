@@ -8,7 +8,33 @@ NetLab, Spoofing hub, App Lock, customization and boot/recovery branding. Existi
 Coral limitations still apply; the first full Flame build and phone validation
 remain pending.
 
+## Complete build from mkdir (default jobs)
+
+Use a fresh Flame directory with the Android 17 build dependencies, Repo, Git
+LFS, Python 3.12+, Java 21+, Pillow and numpy installed. On ServerHive, run this
+in the provider's initialized Byobu/Tmux/RBE shell and keep RBE enabled. Choose
+this block or the original 8-job block below for a fresh checkout.
+
+```bash
+mkdir -p ~/heckeros-flame &&
+cd ~/heckeros-flame &&
+git lfs install &&
+repo init -u https://github.com/its-hecker/HeckerOS.git -b feat/suite-polish --git-lfs &&
+git clone --branch main --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
+repo sync -c --fail-fast --no-clone-bundle --no-tags &&
+env -u HECKER_BUILD_JOBS HECKER_DEVICE=flame HECKER_BUILD_VARIANT=userdebug bash .repo/local_manifests/build.sh
+```
+
+`env -u HECKER_BUILD_JOBS` clears an inherited job override for this invocation,
+so `build.sh` uses its default available logical CPU count (`nproc`). The source
+sync also uses Repo's default download parallelism. The helper retains all
+preparation and output checks. Build output: `out/target/product/flame/`.
+
 ## Complete build from mkdir
+
+**8 build jobs:** this original block explicitly sets `HECKER_BUILD_JOBS=8`.
+The later rebuild example that sets the same variable also uses eight build
+jobs; `repo sync -j8` separately controls source downloads.
 
 Start in a separate source directory with the same Android 17 prerequisites as Coral:
 Git LFS, Python 3.12+, Java 21+, Pillow and numpy. Use the provider's initialized
