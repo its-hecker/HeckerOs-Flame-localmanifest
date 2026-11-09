@@ -92,7 +92,7 @@
     "frameworks/base": {
       "repository": "its-hecker/heckeros_frameworks_base",
       "branch": "cnb_latest_stable",
-      "revision": "1c4177ea2bf71de8bbb556ad480f59673c8ba31f",
+      "revision": "e0ed62e80adbd915c7ad9776e5ccd166dd72c28f",
       "files": [
         "core/res/res/values/config.xml",
         "packages/SystemUI/res/values/config.xml",
