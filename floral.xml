@@ -16,7 +16,7 @@
   <project name="its-hecker/vendor_lunaris_dolby" path="vendor/lunaris/dolby" remote="floral-github" revision="544e6271c955e2bf450c8481ac1e71551cb5a800" upstream="refs/heads/cnb_latest_stable" dest-branch="cnb_latest_stable" />
   <project name="its-hecker/floral-motionsense-plugin" path="vendor/hecker/floral/motionsense" remote="floral-github" revision="8c14ea2952305004a658ed0506e39f0b5b1e3c58" upstream="refs/heads/fix/xda-improvements-20261108" dest-branch="fix/xda-improvements-20261108" />
   <project name="its-hecker/floral-3D-faceid-plugin" path="vendor/hecker/floral/faceid" remote="floral-github" revision="d998995e1452d2c3d9882bfdf659e1db760a99be" upstream="refs/heads/main" dest-branch="main" />
-  <project name="its-hecker/HeckerOS" path="vendor/hecker/floral/suite" remote="floral-github" revision="244876b8d257f3e68fc00e4215a3d6f7b678a74f" upstream="refs/heads/flame-cnb_latest_stable" dest-branch="flame-cnb_latest_stable" />
+  <project name="its-hecker/HeckerOS" path="vendor/hecker/floral/suite" remote="floral-github" revision="d889f5f60875f0ed8e5123f7351d32688b9fe318" upstream="refs/heads/perf/flame-smoothness" dest-branch="perf/flame-smoothness" />
   <remove-project path="packages/services/OmniJaws" optional="true" />
   <extend-project name="PixelOS-AOSP/android_packages_apps_DolbyAtmos" path="packages/apps/DolbyAtmos" revision="13bbe61cf3e1046e3a1f0bda4719c321c953ce50" upstream="refs/heads/seventeen" />
   <extend-project name="LineageOS/android_hardware_lineage_compat" path="hardware/lineage/compat" revision="590c94850e079642136a4577305d02e4174caabc" upstream="refs/heads/lineage-24.0" />
@@ -24,7 +24,7 @@
   <extend-project name="LineageOS/android_hardware_qcom-caf_common" path="hardware/qcom-caf/common" revision="5e84e6f8fc47530881fa8d95cf533617ff51e820" upstream="refs/heads/lineage-24.0" />
   <extend-project name="its-hecker/heckeros_vendor_custom" path="vendor/custom" revision="82457873ad4f7c75195c21ddf9da35903a0d975f" upstream="refs/heads/cnb_latest_stable" />
   <extend-project name="its-hecker/heckeros_vendor_lineage" path="vendor/lineage" revision="a8286e3a3edc3aed7e774ca57476477f178a0c46" upstream="refs/heads/cnb_latest_stable" />
-  <extend-project name="its-hecker/heckeros_frameworks_base" path="frameworks/base" revision="e0ed62e80adbd915c7ad9776e5ccd166dd72c28f" upstream="refs/heads/cnb_latest_stable" dest-branch="cnb_latest_stable" />
+  <extend-project name="its-hecker/heckeros_frameworks_base" path="frameworks/base" revision="f048f9de9902e2aa9ed82373954ff98541928e03" upstream="refs/heads/perf/floral-smoothness" dest-branch="perf/floral-smoothness" />
   <extend-project name="platform/hardware/google/camera" path="hardware/google/camera" revision="cd15337bd229dd521a860d88bca3e37c3ca845f7" upstream="refs/tags/android-17.0.0_r1" />
   <extend-project name="PixelOS-AOSP/android_system_sepolicy" path="system/sepolicy" revision="99c58a7cc9a44fe33c93808452d018e756d84753" upstream="refs/heads/seventeen" />
   <extend-project name="PixelOS-AOSP/android_system_core" path="system/core" revision="a5313eaec0219b021aaa5e59cc10dd07cfa8504c" upstream="refs/heads/seventeen" />

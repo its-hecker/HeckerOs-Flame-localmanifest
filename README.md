@@ -1,11 +1,12 @@
-# HeckerOS stable build for Google Pixel 4 (Flame)
+# HeckerOS smoothness test for Google Pixel 4 (Flame)
 
 This branch builds `hecker_flame-hecker_suite-userdebug` from the Coral stable
 feature baseline. It includes HeckerVault, WireGuard with a scrollable test log,
 the Material You headphone popup, grouped navigation settings, the Motion Sense
 companion, app compatibility and the Google-signed SIM Manager update.
 
-The shared platform, kernel and KernelSU use Coral's stable pins. The device
+The shared SystemUI source includes quicker Quick Settings dismissal. The kernel
+and KernelSU use Coral's stable pins. The device
 tree retains Flame's camera provider and panel configuration, including the
 60 Hz low-brightness zone. The vendor retains Flame's firmware and radio images.
 The Motion Sense and FaceID pins use their existing plugin branches.
@@ -16,11 +17,10 @@ Use an initialized ServerHive RBE shell with Repo, Git LFS, Python 3.12+,
 Java 21+, Pillow and NumPy.
 
 ```bash
-mkdir -p ~/heckeros-flame-stable &&
-cd ~/heckeros-flame-stable &&
-git lfs install &&
-repo init -u https://github.com/its-hecker/HeckerOS.git -b flame-cnb_latest_stable --git-lfs &&
-git clone --branch cnb_latest_stable --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
+mkdir -p ~/heckeros-flame-smoothness &&
+cd ~/heckeros-flame-smoothness &&
+repo init -u https://github.com/its-hecker/HeckerOS.git -b perf/flame-smoothness --git-lfs &&
+git clone --branch perf/flame-smoothness --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
 repo sync -c --fail-fast --no-clone-bundle --no-tags &&
 env -u HECKER_BUILD_JOBS USE_RBE=true HECKER_DEVICE=flame HECKER_BUILD_VARIANT=userdebug bash .repo/local_manifests/build.sh
 ```
@@ -33,8 +33,8 @@ prepares the ROM, builds the target and checks the installed files.
 
 | Component | Branch and checkout |
 | --- | --- |
-| Suite and Repo manifest | `HeckerOS` on `flame-cnb_latest_stable` |
-| Local manifest | `HeckerOs-Flame-localmanifest` on `cnb_latest_stable` |
+| Suite and Repo manifest | `HeckerOS` on `perf/flame-smoothness` |
+| Local manifest | `HeckerOs-Flame-localmanifest` on `perf/flame-smoothness` |
 | Device tree | `heckeros-floral-devicetree` on `flame-cnb_latest_stable` at `device/google/coral` |
 | Vendor | `HeckerOs-Flame-vendor` on `cnb_latest_stable` at `vendor/google/flame` |
 

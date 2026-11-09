@@ -91,8 +91,8 @@
     },
     "frameworks/base": {
       "repository": "its-hecker/heckeros_frameworks_base",
-      "branch": "cnb_latest_stable",
-      "revision": "e0ed62e80adbd915c7ad9776e5ccd166dd72c28f",
+      "branch": "perf/floral-smoothness",
+      "revision": "f048f9de9902e2aa9ed82373954ff98541928e03",
       "files": [
         "core/res/res/values/config.xml",
         "packages/SystemUI/res/values/config.xml",
@@ -271,8 +271,8 @@
     }
   },
   "hecker_suite": {
-    "source_branch": "flame-cnb_latest_stable",
-    "integration_branch": "cnb_latest_stable",
+    "source_branch": "perf/flame-smoothness",
+    "integration_branch": "perf/flame-smoothness",
     "release": "hecker_suite",
     "base_release": "cp2a",
     "status": "Coral stable features integrated for Flame. Full ROM build and device testing pending.",
@@ -314,8 +314,8 @@
         "notes": "Current PIF Java behavior adapted to HeckerOS Settings/process-scoped native property bridge; overlapping PixelOS PIF/keybox call paths removed."
       }
     },
-    "functional_revision": "244876b8d257f3e68fc00e4215a3d6f7b678a74f",
-    "revision": "244876b8d257f3e68fc00e4215a3d6f7b678a74f"
+    "functional_revision": "d889f5f60875f0ed8e5123f7351d32688b9fe318",
+    "revision": "d889f5f60875f0ed8e5123f7351d32688b9fe318"
   },
   "heckeros": {
     "version": "1.5",
