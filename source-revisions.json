@@ -1,9 +1,9 @@
 {
-  "checked_on": "2026-10-27",
+  "checked_on": "2026-11-09",
   "pixelos_manifest": {
     "repository": "PixelOS-AOSP/android_manifest",
     "branch": "seventeen",
-    "revision": "c16cfd0c95c5c3d7f5f2ef85b5b3140787db2035"
+    "revision": "1f53b335fdbf44bc04906248056f878eb52588fc"
   },
   "base_snapshots": {
     "device": {
@@ -61,8 +61,8 @@
     },
     "vendor/custom": {
       "repository": "its-hecker/heckeros_vendor_custom",
-      "branch": "feat/about-phone-official",
-      "revision": "302ac1f722258085326e38d45e2742a067316d59",
+      "branch": "cnb_latest_stable",
+      "revision": "82457873ad4f7c75195c21ddf9da35903a0d975f",
       "files": [
         "config/",
         "overlay/common/",
@@ -74,8 +74,8 @@
     },
     "vendor/lineage": {
       "repository": "its-hecker/heckeros_vendor_lineage",
-      "branch": "heckeros-17",
-      "revision": "0d2ff0b8055eb745d36dfef3600a73f5185a4fff",
+      "branch": "cnb_latest_stable",
+      "revision": "a8286e3a3edc3aed7e774ca57476477f178a0c46",
       "files": [
         "overlay/common/",
         "config/common_mobile_full.mk"
@@ -91,8 +91,8 @@
     },
     "frameworks/base": {
       "repository": "its-hecker/heckeros_frameworks_base",
-      "branch": "heckeros-17",
-      "revision": "854e6dbf73ae1cd61095085a9655c8d9136104eb",
+      "branch": "perf/floral-smoothness",
+      "revision": "f048f9de9902e2aa9ed82373954ff98541928e03",
       "files": [
         "core/res/res/values/config.xml",
         "packages/SystemUI/res/values/config.xml",
@@ -178,7 +178,39 @@
         "packages/SystemUI/src/com/android/systemui/volume/SafetyWarningDialogDelegate.java",
         "packages/SystemUI/src/com/android/systemui/volume/CsdWarningDialogDelegate.java",
         "packages/SystemUI/plugin/src/com/android/systemui/plugins/VolumeDialog.java",
-        "packages/SystemUI/plugin/src/com/android/systemui/plugins/VolumeDialogController.java"
+        "packages/SystemUI/plugin/src/com/android/systemui/plugins/VolumeDialogController.java",
+        "services/core/java/com/android/server/pm/AppsFilterBase.java",
+        "services/core/java/com/android/server/pm/AppsFilterImpl.java",
+        "services/core/java/com/android/server/pm/HeckerRootVisibility.java",
+        "tests/hecker/test_root_visibility.py",
+        "services/core/java/com/android/server/display/mode/DisplayModeDirector.java",
+        "services/core/java/com/android/server/display/mode/LowZoneBrightnessHysteresis.java",
+        "core/res/res/values/symbols.xml",
+        "packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowControllerImpl.java",
+        "core/java/com/android/internal/policy/SystemBarUtils.java",
+        "packages/SystemUI/src/com/android/systemui/keyguard/domain/interactor/KeyguardTouchHandlingInteractor.kt",
+        "packages/SystemUI/src/com/android/systemui/common/ui/view/TouchHandlingView.kt",
+        "packages/SystemUI/src/com/android/systemui/shade/QQSGestureListener.kt",
+        "packages/SystemUI/tests/utils/src/com/android/systemui/keyguard/domain/interactor/KeyguardLongPressInteractorKosmos.kt",
+        "packages/SystemUI/multivalentTests/src/com/android/systemui/keyguard/domain/interactor/KeyguardTouchHandlingInteractorTest.kt",
+        "packages/SystemUI/src/com/android/systemui/shade/NotificationPanelViewController.java",
+        "packages/SystemUI/customization/src/com/android/systemui/shared/settings/data/repository/SystemSettingsRepository.kt",
+        "packages/SystemUI/src/com/android/systemui/util/settings/repository/UserAwareSystemSettingsRepository.kt",
+        "packages/SystemUI/src/com/android/systemui/settings/UserSettingsRepositoryModule.kt",
+        "core/java/android/app/HeckerAppCompatibility.java",
+        "core/java/android/provider/Settings.java",
+        "core/java/com/android/internal/os/AppZygoteInit.java",
+        "services/core/java/com/android/server/pm/parsing/PackageInfoUtils.java",
+        "services/core/java/com/android/server/pm/InstallPackageHelper.java",
+        "tests/hecker/test_app_compatibility.py",
+        "packages/SystemUI/src/com/android/systemui/qs/composefragment/QSFragmentCompose.kt",
+        "packages/SystemUI/compose/features/src/com/android/systemui/keyguard/ui/composable/elements/LockscreenElementFactoryImpl.kt",
+        "packages/SystemUI/Android.bp",
+        "packages/SystemUI/src/com/android/systemui/window/domain/interactor/WindowRootViewBlurInteractor.kt",
+        "core/java/android/app/Instrumentation.java",
+        "core/java/android/app/ApplicationPackageManager.java",
+        "services/core/java/com/android/server/wm/ActivityTaskManagerService.java",
+        "tests/hecker/test_penguin_visibility.py"
       ]
     },
     "hardware/google/camera": {
@@ -212,8 +244,8 @@
     },
     "packages/apps/Settings": {
       "repository": "its-hecker/heckeros_packages_apps_Settings",
-      "branch": "feat/suite-polish",
-      "revision": "3831282d93ecda4d52a6894077482fe01ecea903",
+      "branch": "cnb_latest_stable",
+      "revision": "d2cef314d2899f4cdf5acd31881c803f2d55f3f0",
       "files": [
         "src/com/android/settings/homepage/",
         "src/com/android/settings/DisplaySettings.java",
@@ -224,7 +256,8 @@
         "src/com/android/settings/homepage/SettingsHomepageActivity.java",
         "Android.bp",
         "src/com/android/settings/deviceinfo/aboutphone/MyDeviceInfoFragment.java",
-        "res/xml/my_device_info.xml"
+        "res/xml/my_device_info.xml",
+        "AndroidManifest.xml"
       ]
     },
     "packages/apps/Launcher3": {
@@ -238,11 +271,11 @@
     }
   },
   "hecker_suite": {
-    "source_branch": "feat/suite-polish",
-    "integration_branch": "feat/suite-polish",
+    "source_branch": "perf/flame-smoothness",
+    "integration_branch": "perf/flame-smoothness",
     "release": "hecker_suite",
     "base_release": "cp2a",
-    "status": "Source validation only; full ROM build and phone tests required",
+    "status": "Coral stable features integrated for Flame. Full ROM build and device testing pending.",
     "feature_sources": {
       "risingos": {
         "repository": "RisingOS-Revived/android_frameworks_base",
@@ -281,30 +314,11 @@
         "notes": "Current PIF Java behavior adapted to HeckerOS Settings/process-scoped native property bridge; overlapping PixelOS PIF/keybox call paths removed."
       }
     },
-    "revision": "a51eacc198efe0a79a1f5e5e455c422064206e95",
-    "coral_feature_baseline": "3a35f836add54a82c14d030f7a7e6fefe093a98d",
-    "pakistan_ims": {
-      "configured_on": "2026-10-27",
-      "configured_carriers": [
-        "Jazz",
-        "Jazz/Warid",
-        "Ufone",
-        "Zong",
-        "Telenor"
-      ],
-      "configured_plmns": [
-        "41001",
-        "41007",
-        "41003",
-        "41004",
-        "41006"
-      ],
-      "documentation": "ims/README.md",
-      "validation": "Source/API checked; full ROM build, device VoLTE/VoWiFi calling and compatible Pakistan modem profiles remain unverified."
-    }
+    "functional_revision": "d889f5f60875f0ed8e5123f7351d32688b9fe318",
+    "revision": "d889f5f60875f0ed8e5123f7351d32688b9fe318"
   },
   "heckeros": {
-    "version": "1.0",
+    "version": "1.5",
     "android": 17,
     "devices": [
       "flame"
@@ -315,43 +329,64 @@
   "hardware_sources": {
     "device": {
       "repository": "its-hecker/heckeros-floral-devicetree",
-      "branch": "flame",
-      "revision": "e00918e713e8561a8f931d5377c97c5af8d55068"
+      "branch": "flame-cnb_latest_stable",
+      "revision": "171e2d2353b6468bc30840f2526e37dbd5f5ea7b"
     },
     "vendor": {
       "repository": "its-hecker/HeckerOs-Flame-vendor",
-      "branch": "main",
-      "revision": "ed43a21e890e8581873566f0b7a03839b3d56b0f"
+      "branch": "cnb_latest_stable",
+      "revision": "cd309ca90813dc1e0e75cbdb57481880ac0b6d91"
     },
     "kernel": {
       "repository": "its-hecker/heckeros-floral-kernel",
-      "branch": "feat/game-booster-reference",
-      "revision": "48d6881fb8537f62811209927022e467d37e3a98"
+      "branch": "cnb_latest_stable",
+      "revision": "358d9f4bbe23acfd721d2ea002b3c97a800f1d5b"
     }
   },
   "platform_ownership": {
     "status": "pinned-upstream-with-owned-customizations",
     "owned_projects": 4,
-    "total_pixelos_projects": 91,
-    "remaining_projects": 87,
+    "total_pixelos_projects": 92,
+    "remaining_projects": 88,
     "migration": "migration/README.md",
     "updates": "Upstream changes require explicit pin updates, review and another build. No automatic merges or phone updates.",
     "bulk_migration_required": false,
-    "upstream_lock": "integration/upstream-platform-lock.json"
+    "upstream_lock": "upstream-platform-lock.json"
   },
   "device_variants": {
     "flame": {
       "device_path": "device/google/coral",
-      "device_branch": "flame",
+      "device_branch": "flame-cnb_latest_stable",
       "vendor_repository": "its-hecker/HeckerOs-Flame-vendor",
       "vendor_path": "vendor/google/flame",
       "manifest_repository": "its-hecker/HeckerOs-Flame-localmanifest",
       "product": "hecker_flame-hecker_suite-userdebug",
       "base_vendor_repository": "Nahida-Prjkt/proprietary_vendor_google_flame",
       "base_vendor_revision": "a57f01d5642a55250e48b244f51be9322659eeed",
-      "features": "Same shared sources and product inheritance as Coral; full Flame build and phone validation pending",
-      "device_revision": "e00918e713e8561a8f931d5377c97c5af8d55068",
-      "vendor_revision": "ed43a21e890e8581873566f0b7a03839b3d56b0f"
+      "features": "Shared Coral stable inputs with Flame product, camera, radio and display integration.",
+      "device_revision": "171e2d2353b6468bc30840f2526e37dbd5f5ea7b",
+      "vendor_revision": "cd309ca90813dc1e0e75cbdb57481880ac0b6d91",
+      "vendor_branch": "cnb_latest_stable"
+    }
+  },
+  "coral_stable_baseline": {
+    "local_manifest": {
+      "repository": "its-hecker/HeckerOs-localmanifest",
+      "branch": "cnb_latest_stable",
+      "revision": "66cddcddd29df5759e964558ac860db67985b8ee"
+    },
+    "suite": {
+      "repository": "its-hecker/HeckerOS",
+      "branch": "cnb_latest_stable",
+      "revision": "1e9fa5715e0862be074606fb23f7436a2293bfe1"
+    },
+    "motion_sense": {
+      "branch": "fix/xda-improvements-20261108",
+      "revision": "8c14ea2952305004a658ed0506e39f0b5b1e3c58"
+    },
+    "faceid": {
+      "branch": "main",
+      "revision": "d998995e1452d2c3d9882bfdf659e1db760a99be"
     }
   }
 }
