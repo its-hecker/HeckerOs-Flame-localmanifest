@@ -33,7 +33,15 @@ class BuildPreflightTests(unittest.TestCase):
         binary = self.rom / "test-bin"
         binary.mkdir()
         git = binary / "git"
-        git.write_text("#!/bin/sh\necho REACHED_LFS_BOUNDARY >&2\nexit 47\n")
+        pins = {p.get("path"): p.get("revision") for p in ET.parse(BUILD.parent / "floral.xml").getroot()
+                if p.tag in {"project", "extend-project"}}
+        git.write_text("#!/usr/bin/env python3\nimport sys\npins=" + repr(pins) + "\n"
+                       "if 'rev-parse' in sys.argv:\n"
+                       " path=sys.argv[2]\n"
+                       " print(next((v for k,v in pins.items() if path.endswith(k)), '0'*40))\n"
+                       "elif 'ls-tree' in sys.argv: print('160000 commit '+'0'*40+'\\tKernelSU')\n"
+                       "elif 'status' in sys.argv: pass\n"
+                       "else:\n print('REACHED_LFS_BOUNDARY',file=sys.stderr);sys.exit(47)\n")
         git.chmod(0o755)
         self.namespace_source, manifest = stage(self.rom)
         repo = binary / "repo"
@@ -110,7 +118,7 @@ class BuildPreflightTests(unittest.TestCase):
             command.chmod(0o755)
         (self.rom / "build/make/envsetup.sh").write_text(
             'lunch() { :; }\n'
-            'get_build_var() { echo out/target/product/coral; }\n'
+            'get_build_var() { echo out/target/product/flame; }\n'
             'm() { printf "%s RBE=%s\\n" "$*" "${USE_RBE-unset}" >> m-calls; }\n')
         self.environment["USE_RBE"] = "true"
         self.environment["HECKER_BUILD_JOBS"] = "8"
@@ -119,13 +127,38 @@ class BuildPreflightTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(calls.read_text().splitlines(), ["-j8 heckeros RBE=true"])
         calls.unlink()
-        stale = self.rom / "out/target/product/coral/product/app/OmniJaws"
+        stale = self.rom / "out/target/product/flame/product/app/OmniJaws"
         stale.mkdir(parents=True)
         (stale / "OmniJaws.apk").write_bytes(b"stale apk")
         result = self.invoke()
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(calls.read_text().splitlines(),
                          ["installclean RBE=true", "-j8 heckeros RBE=true"])
+
+    def test_addon_d_is_cleaned_and_default_jobs_are_left_to_android(self):
+        binary = self.rom / "test-bin"
+        for name in ("git", "python3"):
+            command = binary / name
+            command.write_text("#!/bin/sh\nexit 0\n")
+            command.chmod(0o755)
+        (self.rom / "build/make/envsetup.sh").write_text(
+            'lunch() { :; }\n'
+            'get_build_var() { echo out/target/product/flame; }\n'
+            'm() { printf "%s RBE=%s\\n" "$*" "${USE_RBE-unset}" >> m-calls; }\n')
+        self.environment["USE_RBE"] = "true"
+        self.environment.pop("HECKER_BUILD_JOBS", None)
+        calls = self.rom / "m-calls"
+        result = self.invoke()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(calls.read_text().splitlines(), ["heckeros RBE=true"])
+        calls.unlink()
+        stale = self.rom / "out/target/product/flame/system/addon.d"
+        stale.parent.mkdir(parents=True)
+        stale.symlink_to("nonexistent-script-directory")
+        result = self.invoke()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(calls.read_text().splitlines(),
+                         ["installclean RBE=true", "heckeros RBE=true"])
 
 
 if __name__ == "__main__":

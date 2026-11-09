@@ -1,89 +1,47 @@
-# HeckerOS for Google Pixel 4 (Flame)
+# HeckerOS stable build for Google Pixel 4 (Flame)
 
-Android 17 build integration for `hecker_flame-hecker_suite-userdebug`. Flame uses
-shared HeckerOS feature sources with this branch's own platform pins: native Suite,
-Hecker/One UI Quick Settings, launcher/Pixel Recents, GameSpace/popup apps and charging
-controls, Dolby, GCam, LibrePods, 3D Face Unlock, Motion Sense, charging/AOD, lyrics,
-NetLab, Spoofing hub, App Lock, customization and boot/recovery branding. Existing
-Coral limitations still apply; the first full Flame build and phone validation
-remain pending.
+This branch builds `hecker_flame-hecker_suite-userdebug` from the Coral stable
+feature baseline. It includes HeckerVault, WireGuard with a scrollable test log,
+the Material You headphone popup, grouped navigation settings, the Motion Sense
+companion, app compatibility and the Google-signed SIM Manager update.
 
-## Complete build from mkdir (default jobs)
+The shared platform, kernel and KernelSU use Coral's stable pins. The device
+tree retains Flame's camera provider and panel configuration, including the
+60 Hz low-brightness zone. The vendor retains Flame's firmware and radio images.
+The Motion Sense and FaceID pins use their existing plugin branches.
 
-Use a fresh Flame directory with the Android 17 build dependencies, Repo, Git
-LFS, Python 3.12+, Java 21+, Pillow and numpy installed. On ServerHive, run this
-in the provider's initialized Byobu/Tmux/RBE shell and keep RBE enabled. Choose
-this block or the original 8-job block below for a fresh checkout.
+## Build from a fresh directory
+
+Use an initialized ServerHive RBE shell with Repo, Git LFS, Python 3.12+,
+Java 21+, Pillow and NumPy.
 
 ```bash
-mkdir -p ~/heckeros-flame &&
-cd ~/heckeros-flame &&
+mkdir -p ~/heckeros-flame-stable &&
+cd ~/heckeros-flame-stable &&
 git lfs install &&
-repo init -u https://github.com/its-hecker/HeckerOS.git -b feat/suite-polish --git-lfs &&
-git clone --branch main --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
+repo init -u https://github.com/its-hecker/HeckerOS.git -b flame-cnb_latest_stable --git-lfs &&
+git clone --branch cnb_latest_stable --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
 repo sync -c --fail-fast --no-clone-bundle --no-tags &&
-env -u HECKER_BUILD_JOBS HECKER_DEVICE=flame HECKER_BUILD_VARIANT=userdebug bash .repo/local_manifests/build.sh
+env -u HECKER_BUILD_JOBS USE_RBE=true HECKER_DEVICE=flame HECKER_BUILD_VARIANT=userdebug bash .repo/local_manifests/build.sh
 ```
 
-`env -u HECKER_BUILD_JOBS` clears an inherited job override for this invocation,
-so `build.sh` uses its default available logical CPU count (`nproc`). The source
-sync also uses Repo's default download parallelism. The helper retains all
-preparation and output checks. Build output: `out/target/product/flame/`.
+Build output goes to `out/target/product/flame/`. The helper verifies pinned
+sources and the KernelSU submodule, fetches and checks all 11 Flame radio images,
+prepares the ROM, builds the target and checks the installed files.
 
-## Complete build from mkdir
+## Source branches
 
-**8 build jobs:** this original block explicitly sets `HECKER_BUILD_JOBS=8`.
-The later rebuild example that sets the same variable also uses eight build
-jobs; `repo sync -j8` separately controls source downloads.
-
-Start in a separate source directory with the same Android 17 prerequisites as Coral:
-Git LFS, Python 3.12+, Java 21+, Pillow and numpy. Use the provider's initialized
-Byobu/RBE environment if building on ServerHive.
-
-```bash
-mkdir -p ~/heckeros-flame &&
-cd ~/heckeros-flame &&
-git lfs install &&
-repo init -u https://github.com/its-hecker/HeckerOS.git -b feat/suite-polish --git-lfs &&
-git clone --branch main --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
-repo sync -c -j8 --fail-fast --no-clone-bundle --no-tags &&
-HECKER_DEVICE=flame HECKER_BUILD_VARIANT=userdebug HECKER_BUILD_JOBS=8 bash .repo/local_manifests/build.sh
-```
-
-Copy the entire block in the initialized build shell. The `&&` chain stops
-at the first failure; the helper performs environment setup, target selection,
-preparation and compilation. Keep ServerHive's existing RBE settings.
-
-The helper defaults to Flame, fetches its radio images through the preserved upstream
-LFS endpoint, prepares the same guarded feature adapters as Coral, selects
-`hecker_flame-hecker_suite-userdebug` and runs `m heckeros`. Installed output is checked
-under `out/target/product/flame`. Later builds use:
-
-```bash
-HECKER_BUILD_JOBS=8 bash .repo/local_manifests/build.sh
-```
-
-## Hardware and feature sources
-
-| Component | Selection |
+| Component | Branch and checkout |
 | --- | --- |
-| Shared device tree | `its-hecker/heckeros-floral-devicetree`, branch `flame`, path `device/google/coral` |
-| Flame hardware variant | Original `flame/` configuration: 1080x2280, 440 dpi, Flame overlays/audio/thermal/CHRE |
-| Vendor | `its-hecker/HeckerOs-Flame-vendor`, path `vendor/google/flame` |
-| Kernel | Shared Floral kernel; this branch's exact pin is recorded in `floral.xml` |
-| Features | Shared `its-hecker/HeckerOS` on `feat/suite-polish`, using the framework/Settings/plugins/Dolby selections recorded in `floral.xml` |
+| Suite and Repo manifest | `HeckerOS` on `flame-cnb_latest_stable` |
+| Local manifest | `HeckerOs-Flame-localmanifest` on `cnb_latest_stable` |
+| Device tree | `heckeros-floral-devicetree` on `flame-cnb_latest_stable` at `device/google/coral` |
+| Vendor | `HeckerOs-Flame-vendor` on `cnb_latest_stable` at `vendor/google/flame` |
 
-`device/google/coral` is the common source directory for both phones and remains
-that path for Flame. The Flame branch selects a `-flame` camera build module, retains
-its stock executable/init/VINTF identity and includes the same ROM policy as Coral.
-The vendor import preserves the original Flame proprietary files and radio pointers,
-adding the camera/init and eight FaceID install-ownership fixes used on Coral.
+`floral.xml` records the exact dependency commits. `source-revisions.json`
+records the Coral baseline and Flame integration.
 
-`floral.xml` pins the complete dependency graph, including the reviewed Suite revision.
-`source-revisions.json` records provenance. Update the pins deliberately when bringing
-in later Coral features; do not replace Flame's vendor with the Coral vendor.
-
-## Checks and first boot
+## Source checks and first boot
 
 ```bash
 python3 tools/validate.py
@@ -91,21 +49,9 @@ bash -n build.sh
 python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-Source checks validate manifest pins, helper routing and build regressions. Product
-inheritance is tested in the shared HeckerOS repository. These checks do not compile
-or boot Android. Test display, touch, cameras/infrared, Face Unlock, Soli, mobile radio,
-Wi-Fi/Bluetooth, audio, thermal/charging behavior, GameSpace/bypass/popup apps,
-launcher/Recents, Quick Settings, AOD and Suite features after the first full build.
-
-[Detailed Flame notes](https://github.com/its-hecker/HeckerOS/blob/feat/suite-polish/docs/flame-bringup.md)
-
-## Pakistan IMS test configuration
-
-This manifest pins the shared Suite with VoLTE/Wi-Fi Calling defaults and
-dedicated IMS APNs for Jazz/Warid, Ufone, Zong and Telenor. Independent icon
-switches are under Hecker Suite > Status bar > Calling indicators; icons follow
-actual IMS voice registration and availability for each SIM.
-
-Source, SDK and host checks pass. Working calls and a compatible Pakistan modem
-profile remain unverified; rebuild and test the individual SIMs before marking
-a carrier as supported. See the [IMS implementation and device checks](https://github.com/its-hecker/HeckerOS/blob/a51eacc198efe0a79a1f5e5e455c422064206e95/ims/README.md).
+Full ROM compilation and on-device verification are pending. Check boot, display,
+cameras, Soli, Face Unlock, eSIM setup, mobile radio, Wi-Fi and Bluetooth on Flame
+before promoting this branch to the default. Motion feedback is available under
+HeckerLab → Status bar. The shared Pakistan IMS defaults retain the Jazz/Warid,
+Ufone, Zong and Telenor APNs, with working calls subject to device and carrier
+testing.
