@@ -91,8 +91,8 @@
     },
     "frameworks/base": {
       "repository": "its-hecker/heckeros_frameworks_base",
-      "branch": "perf/floral-smoothness",
-      "revision": "f048f9de9902e2aa9ed82373954ff98541928e03",
+      "branch": "cnb_latest_stable",
+      "revision": "dcf320845748da474e8e511a019cc7741358d149",
       "files": [
         "core/res/res/values/config.xml",
         "packages/SystemUI/res/values/config.xml",
@@ -271,11 +271,11 @@
     }
   },
   "hecker_suite": {
-    "source_branch": "perf/flame-smoothness",
-    "integration_branch": "perf/flame-smoothness",
+    "source_branch": "flame-cnb_latest_stable",
+    "integration_branch": "flame-cnb_latest_stable",
     "release": "hecker_suite",
     "base_release": "cp2a",
-    "status": "Coral stable features integrated for Flame. Full ROM build and device testing pending.",
+    "status": "Flame updated to Coral CNB stable feature sources; full ROM and device boot validation pending.",
     "feature_sources": {
       "risingos": {
         "repository": "RisingOS-Revived/android_frameworks_base",
@@ -314,8 +314,8 @@
         "notes": "Current PIF Java behavior adapted to HeckerOS Settings/process-scoped native property bridge; overlapping PixelOS PIF/keybox call paths removed."
       }
     },
-    "functional_revision": "d889f5f60875f0ed8e5123f7351d32688b9fe318",
-    "revision": "d889f5f60875f0ed8e5123f7351d32688b9fe318"
+    "functional_revision": "e4cf2f8f8078c0d9a4037dc680b66f9972e76efb",
+    "revision": "e4cf2f8f8078c0d9a4037dc680b66f9972e76efb"
   },
   "heckeros": {
     "version": "1.5",
@@ -330,7 +330,7 @@
     "device": {
       "repository": "its-hecker/heckeros-floral-devicetree",
       "branch": "flame-cnb_latest_stable",
-      "revision": "171e2d2353b6468bc30840f2526e37dbd5f5ea7b"
+      "revision": "87b6c9c391cdd005ad126040c96f56ec965cab31"
     },
     "vendor": {
       "repository": "its-hecker/HeckerOs-Flame-vendor",
@@ -340,7 +340,7 @@
     "kernel": {
       "repository": "its-hecker/heckeros-floral-kernel",
       "branch": "cnb_latest_stable",
-      "revision": "358d9f4bbe23acfd721d2ea002b3c97a800f1d5b"
+      "revision": "73ede50b7eb81b081a314be06f4fe89fc742946f"
     }
   },
   "platform_ownership": {
@@ -364,7 +364,7 @@
       "base_vendor_repository": "Nahida-Prjkt/proprietary_vendor_google_flame",
       "base_vendor_revision": "a57f01d5642a55250e48b244f51be9322659eeed",
       "features": "Shared Coral stable inputs with Flame product, camera, radio and display integration.",
-      "device_revision": "171e2d2353b6468bc30840f2526e37dbd5f5ea7b",
+      "device_revision": "87b6c9c391cdd005ad126040c96f56ec965cab31",
       "vendor_revision": "cd309ca90813dc1e0e75cbdb57481880ac0b6d91",
       "vendor_branch": "cnb_latest_stable"
     }
@@ -373,12 +373,12 @@
     "local_manifest": {
       "repository": "its-hecker/HeckerOs-localmanifest",
       "branch": "cnb_latest_stable",
-      "revision": "66cddcddd29df5759e964558ac860db67985b8ee"
+      "revision": "e2258a604ffd732b4429c0d9a6315831991c0373"
     },
     "suite": {
       "repository": "its-hecker/HeckerOS",
       "branch": "cnb_latest_stable",
-      "revision": "1e9fa5715e0862be074606fb23f7436a2293bfe1"
+      "revision": "008aa6838e13f9cf7819875ee50a3cdfc60e4bf4"
     },
     "motion_sense": {
       "branch": "fix/xda-improvements-20261108",
