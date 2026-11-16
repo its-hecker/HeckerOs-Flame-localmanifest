@@ -39,7 +39,7 @@ class BuildPreflightTests(unittest.TestCase):
                        "if 'rev-parse' in sys.argv:\n"
                        " path=sys.argv[2]\n"
                        " print(next((v for k,v in pins.items() if path.endswith(k)), '0'*40))\n"
-                       "elif 'ls-tree' in sys.argv: pass\\n"
+                       "elif 'ls-tree' in sys.argv: pass\n"
                        "elif 'status' in sys.argv: pass\n"
                        "else:\n print('REACHED_LFS_BOUNDARY',file=sys.stderr);sys.exit(47)\n")
         git.chmod(0o755)
