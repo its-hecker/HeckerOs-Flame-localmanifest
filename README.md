@@ -1,78 +1,67 @@
-# HeckerOS non-KSU boot build — Pixel 4 (`flame`)
+# HeckerOS smoothness test for Google Pixel 4 (Flame)
 
-This `nonksu` branch selects the optional
-[Floral kernel without KernelSU Next](https://github.com/its-hecker/HeckerOsfloral-Kernel-NonKsu).
-The normal manifest branch continues selecting the regular KSU kernel. Every other
-platform, device, vendor, plugin and Suite selection is retained from this device's
-normal manifest. KernelSU Next and SUSFS are removed; the non-root kernel code,
-configuration and GameSpace charging driver are preserved.
+This branch builds `hecker_flame-hecker_suite-userdebug` from the Coral stable
+feature baseline. It includes HeckerVault, WireGuard with a scrollable test log,
+the Material You headphone popup, grouped navigation settings, the Motion Sense
+companion, app compatibility and the Google-signed SIM Manager update.
 
-## Complete optional boot build from mkdir
+The shared SystemUI source includes quicker Quick Settings dismissal. The kernel
+and KernelSU use Coral's stable pins. The device
+tree retains Flame's camera provider and panel configuration, including the
+60 Hz low-brightness zone. The vendor retains Flame's firmware and radio images.
+The Motion Sense and FaceID pins use their existing plugin branches.
 
-First build the normal HeckerOS ROM and retain its complete output. Use a separate
-Android source checkout for the non-KSU build, with the **same release source pins,
-build configuration and signing settings**. Use the initialized provider/Byobu/RBE
-session and the normal Android 17 prerequisites, Git LFS, Python, Java, Pillow and numpy.
+## Build from a fresh directory
+
+Use an initialized ServerHive RBE shell with Repo, Git LFS, Python 3.12+,
+Java 21+, Pillow and NumPy.
 
 ```bash
-mkdir -p ~/heckeros-flame-nonksu &&
-cd ~/heckeros-flame-nonksu &&
-git lfs install &&
-repo init -u https://github.com/its-hecker/HeckerOS.git -b feat/suite-polish --git-lfs &&
-git clone --branch nonksu --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
-repo sync -c -j8 --fail-fast --no-clone-bundle --no-tags &&
-HECKER_DEVICE=flame HECKER_KSU_PRODUCT_OUT="$HOME/heckeros-flame/out/target/product/flame" \
-  HECKER_BUILD_JOBS=8 bash .repo/local_manifests/build-nonksu-boot.sh
+mkdir -p ~/heckeros-flame-smoothness &&
+cd ~/heckeros-flame-smoothness &&
+repo init -u https://github.com/its-hecker/HeckerOS.git -b perf/flame-smoothness --git-lfs &&
+git clone --branch perf/flame-smoothness --single-branch https://github.com/its-hecker/HeckerOs-Flame-localmanifest.git .repo/local_manifests &&
+repo sync -c --fail-fast --no-clone-bundle --no-tags &&
+env -u HECKER_BUILD_JOBS USE_RBE=true HECKER_DEVICE=flame HECKER_BUILD_VARIANT=userdebug bash .repo/local_manifests/build.sh
 ```
 
-Copy the entire block in the initialized build shell. The `&&` chain stops
-at the first failure; the helper performs environment setup, target selection,
-preparation and compilation. Keep ServerHive's existing RBE settings.
+Build output goes to `out/target/product/flame/`. The helper verifies pinned
+sources and the KernelSU submodule, fetches and checks all 11 Flame radio images,
+prepares the ROM, builds the target and checks the installed files.
 
-Set `HECKER_KSU_PRODUCT_OUT` to the normal build's actual `target/product/flame`
-directory. The helper requires its boot image, properties, kernel config, release
-and Module.symvers. It uses a separate `out-nonksu` directory; optionally override
-it with `HECKER_NONKSU_OUT_DIR`. It refuses overlapping normal/non-KSU outputs.
+## Source branches
 
-The existing feature preparation runs normally, followed by Android's `bootimage`
-target. Android handles the original recovery-as-boot, DTB, boot header and AVB
-packaging. After compilation, the release check verifies root absence, the device,
-boot metadata/DTB, the actual packaged kernel and compatibility of every non-root
-exported module CRC and the kernel release with the normal ROM.
+| Component | Branch and checkout |
+| --- | --- |
+| Suite and Repo manifest | `HeckerOS` on `perf/flame-smoothness` |
+| Local manifest | `HeckerOs-Flame-localmanifest` on `perf/flame-smoothness` |
+| Device tree | `heckeros-floral-devicetree` on `flame-cnb_latest_stable` at `device/google/coral` |
+| Vendor | `HeckerOs-Flame-vendor` on `cnb_latest_stable` at `vendor/google/flame` |
 
-On success, the normal ROM output's `nonksu-release/` directory contains:
+`floral.xml` records the exact dependency commits. `source-revisions.json`
+records the Coral baseline and Flame integration.
 
-- `HeckerOS_flame_NonKSU_boot_<hash>.img`;
-- JSON provenance tying the image to the baseline ROM fingerprint and kernel revisions;
-- SHA-256 checksums.
-
-If ABI checks fail, no boot-only release is prepared. Investigate the mismatch or
-build a complete consistent non-KSU ROM/module set. Running this branch's ordinary
-`build.sh` builds a complete non-KSU ROM in the separate output directory; use
-`build-nonksu-boot.sh` for the optional image intended to accompany the normal ROM.
-
-## Kernel layout and compatibility
-
-The device tree stays at `device/google/coral`, the kernel at `kernel/google/msm-4.14`
-and the vendor at `vendor/google/flame`. There is no KernelSU submodule to sync.
-Use a fresh checkout so an old populated root submodule is not left in the kernel.
-
-Flame and Coral share kernel source. A complete boot image also contains recovery,
-a ramdisk and build/device metadata. Distribute **one matching image per device and
-ROM release** until actual output comparison and testing prove a shared boot works.
-Rebuild the optional image for each ROM release. Root-dependent Suite operations
-remain subject to their existing privilege requirements.
-
-## Validation
+## Source checks and first boot
 
 ```bash
 python3 tools/validate.py
-bash -n build.sh build-nonksu-boot.sh
+bash -n build.sh
 python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-Source and host checks cover root removal, configuration, preserved charging code,
-boot packaging rejection cases and build separation. They do not compile or boot
-Android. The first target ARM64 kernel/boot build, real module ABI comparison and
-phone acceptance remain required. `floral.xml` and `source-revisions.json` retain the
-immutable source selections and provenance.
+Full ROM compilation and on-device verification are pending. Check boot, display,
+cameras, Soli, Face Unlock, eSIM setup, mobile radio, Wi-Fi and Bluetooth on Flame
+before promoting this branch to the default. Motion feedback is available under
+HeckerLab → Status bar. The shared Pakistan IMS defaults retain the Jazz/Warid,
+Ufone, Zong and Telenor APNs, with working calls subject to device and carrier
+testing.
+
+## Flame non-KSU build
+
+This branch uses the same HeckerOS Suite, framework, Settings and Flame device source revisions as Flame CNB stable, with the dedicated non-KernelSU kernel and non-KSU vendor/lineage branch. OrangeFox Recovery 2.0 is disabled; the PixelOS-derived Hecker recovery remains selected. Default USB debugging is disabled. Build outputs are isolated under `out-nonksu`.
+
+```bash
+export HECKER_DEVICE=flame HECKER_BUILD_VARIANT=userdebug USE_RBE=true
+unset HECKER_BUILD_JOBS
+bash .repo/local_manifests/build.sh
+```

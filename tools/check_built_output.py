@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import sys
 import zipfile
 
@@ -49,6 +50,51 @@ def check_suite(rom, output):
     installed = output / "system_ext/etc/permissions" / name
     if not original.is_file() or not installed.is_file() or installed.read_bytes() != original.read_bytes():
         raise ValueError("Built system_ext image is missing the exact Launcher permission allowlist")
+    check_vpn(rom, output)
+    check_vault(rom, output)
+
+
+def check_vault(rom, output):
+    source = rom / "vendor/hecker/floral/suite"
+    if not (source / "vault/AndroidManifest.xml").is_file():
+        return  # Older Suite revisions predate this optional feature branch.
+    apk = output / "system_ext/priv-app/HeckerVault/HeckerVault.apk"
+    if not apk.is_file() or apk.stat().st_size == 0:
+        raise ValueError("Built system_ext image is missing HeckerVault.apk")
+    try:
+        with zipfile.ZipFile(apk) as archive:
+            names = archive.namelist()
+            if len(names) != len(set(names)) or not {"AndroidManifest.xml", "classes.dex"} <= set(names) \
+                    or not archive.read("classes.dex").startswith(b"dex\n"):
+                raise ValueError("Built HeckerVault APK is incomplete")
+    except zipfile.BadZipFile as error:
+        raise ValueError("Built HeckerVault APK is invalid") from error
+    for folder, name in (("permissions", "privapp-permissions-hecker-vault.xml"),
+                         ("default-permissions", "default-permissions-hecker-vault.xml"),
+                         ("sysconfig", "hecker-vault-transport.xml")):
+        original = source / "configs" / name
+        installed = output / "system_ext/etc" / folder / name
+        if not installed.is_file() or installed.read_bytes() != original.read_bytes():
+            raise ValueError("Built image is missing the exact HeckerVault runtime file: " + name)
+
+
+def check_vpn(rom, output):
+    source = rom / "vendor/hecker/floral/suite/vpn"
+    for name in ("bin/hecker-tcp-core", "lib64/libclash.so"):
+        if (output / "system_ext" / name).exists():
+            raise ValueError("Built system_ext image contains a retired HeckerVPN file: " + name)
+    controller = output / "system_ext/priv-app/HeckerVpnController/HeckerVpnController.apk"
+    if not controller.is_file() or controller.stat().st_size == 0:
+        raise ValueError("Built system_ext image is missing HeckerVpnController.apk")
+    for name in ("heckervpnd", "hecker-wg", "hecker-wg-quick"):
+        binary = output / "system_ext/bin" / name
+        if not binary.is_file() or binary.stat().st_size == 0 or not os.access(binary, os.X_OK):
+            raise ValueError("Built system_ext image is missing executable " + name)
+    for name, directory in (("heckervpnd.rc", "init"),
+                             ("default-permissions-heckervpn.xml", "default-permissions")):
+        installed = output / "system_ext/etc" / directory / name
+        if not installed.is_file() or installed.read_bytes() != (source / name).read_bytes():
+            raise ValueError("Built system_ext image is missing the exact HeckerVPN runtime file: " + name)
 
 
 def check_motion_sense(output):
@@ -144,7 +190,40 @@ def check_removed_weather(output):
                 raise ValueError("Removed OmniJaws installation remains: " + str(directory))
 
 
+def check_no_addon_d(output):
+    for partition in ("system", "system_ext", "product", "vendor"):
+        candidates = [output / partition / "addon.d"]
+        if partition == "system":
+            candidates.append(output / partition / "system/addon.d")
+        for path in candidates:
+            if path.exists() or path.is_symlink():
+                raise ValueError("addon.d must be absent from the built image: " + str(path))
+
+
+def check_font_customization(rom, output):
+    script = rom / "vendor/hecker/floral/suite/tools/google_sans_cyrillic.py"
+    result = subprocess.run([sys.executable, str(script), "--product-out", str(output)],
+                            capture_output=True, text=True)
+    if result.returncode:
+        raise ValueError("Built product font validation failed: " + result.stdout + result.stderr)
+
+
+def check_build_revision(rom, output):
+    from check_build_revision import head
+    props = next((output / path for path in ("system_ext/etc/build.prop", "system_ext/build.prop")
+                  if (output / path).is_file()), None)
+    if props is None:
+        raise ValueError("Built system_ext image is missing build.prop")
+    values = dict(line.split("=", 1) for line in props.read_text().splitlines()
+                  if "=" in line and not line.startswith("#"))
+    for key, path in (("ro.heckeros.suite_revision", rom / "vendor/hecker/floral/suite"),
+                      ("ro.heckeros.manifest_revision", Path(__file__).resolve().parents[1])):
+        if values.get(key) != head(path):
+            raise ValueError("Built image revision is stale or missing: " + key)
+
+
 def check(rom, output):
+    check_no_addon_d(output)
     check_removed_weather(output)
     filename = SERVICE + ".rc"
     original = rom / VENDOR / "proprietary/vendor/etc/init" / filename
@@ -159,12 +238,14 @@ def check(rom, output):
     check_motion_sense(output)
     check_development_adb(output, expected_mode=os.environ.get("HECKER_DEV_USB_ADB"))
     check_suite(rom, output)
+    check_build_revision(rom, output)
     check_bootanimation(rom, output)
     check_librepods(rom, output)
+    check_font_customization(rom, output)
     print("Built output: camera provider binary/init/VINTF, original ten-APK Google Camera set "
           "and Motion Sense country override, Hecker Suite APK/permissions/freeform; "
           "source-built LibrePods APK payload/permissions; exact HeckerOS boot animation; "
-          "development ADB mode/authentication; OmniJaws absent: PASS")
+          "development ADB mode/authentication; boot-safe font configuration/payloads; OmniJaws absent: PASS")
 
 
 if __name__ == "__main__":
