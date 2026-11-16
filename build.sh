@@ -36,7 +36,25 @@ python3 "$floral_setup_dir/tools/check_qcom_namespaces.py"
 python3 "$floral_setup_dir/tools/validate.py"
 python3 "$floral_setup_dir/tools/check_build_revision.py" --rom-root "$PWD"
 git -C "vendor/google/$HECKER_DEVICE" lfs pull
+if [[ "$HECKER_DEVICE" == "flame" ]]; then
+    # Pixel 4 recovery-as-boot: interactive OrangeFox UI, Android 17 sideload
+    # and fastbootd. Preserve the HeckerOS November KSU kernel and DTB.
+    export HECKER_RECOVERY2=1
+    python3 vendor/hecker/floral/suite/tools/recovery2_rom.py download \
+        out/hecker-recovery2-flame.cpio.gz
+    python3 vendor/hecker/floral/suite/tools/recovery2_brand_art.py \
+        vendor/hecker/floral/suite/recovery/res-xxhdpi/images/logo_image.png \
+        out/hecker-recovery2-brand-assets
+    python3 vendor/hecker/floral/suite/tools/recovery2_rom.py preflight \
+        out/hecker-recovery2-flame.cpio.gz \
+        vendor/hecker/floral/suite/recovery/res-xxhdpi/images/logo_image.png \
+        out/hecker-recovery2-brand-assets
+fi
 python3 "$floral_setup_dir/tools/prepare.py" "$@"
+if [[ "$HECKER_DEVICE" == "flame" ]]; then
+    python3 -m unittest discover -s vendor/hecker/floral/suite/tests \
+        -p 'test_recovery2_*.py' -v
+fi
 python3 "$floral_setup_dir/tools/validate.py" --rom-root "$PWD"
 source build/envsetup.sh
 # Select the native App Lock and Compose QS flags for HeckerOS.
